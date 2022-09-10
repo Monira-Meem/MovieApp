@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<!--    <data>-->
+<!--        <import type="com.example.mymovieapp.data.model.Movie"/>-->
+<!--        <variable-->
+<!--            name="movie"-->
+<!--            type="Movie" />-->
+<!--    </data>-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--            app:loadImage = "@{movie.posterPath}"-->
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivMovieImage"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!--        android:text="@{movie.title}"-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/movieTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/_10dp"
+            app:layout_constraintEnd_toEndOf="@+id/ivMovieImage"
+            app:layout_constraintStart_toStartOf="@+id/ivMovieImage"
+            app:layout_constraintTop_toBottomOf="@+id/ivMovieImage"
+            tools:text="Movie Name" />
+
+<!--        android:text="@{`Year : ` + movie.releaseDate}"-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/movieReleaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_12sp"
+            app:layout_constraintStart_toStartOf="@id/movieTitle"
+            app:layout_constraintTop_toBottomOf="@+id/movieTitle"
+            tools:text="2000-09-16"
+            android:layout_marginTop="@dimen/_8dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

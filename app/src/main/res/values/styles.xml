@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppBar">
+        <item name="elevation">0dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.Light"/>
+
+
+</resources>

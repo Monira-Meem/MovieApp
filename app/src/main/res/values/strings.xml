@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Movie App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="popular_movies">PopularMovie</string>
+    <string name="no_data_found">No data found</string>
+    <string name="retry">Retry</string>
+    <string name="movie_details">Movie Details</string>
+</resources>
