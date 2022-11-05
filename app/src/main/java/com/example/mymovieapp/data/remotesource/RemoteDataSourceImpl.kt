@@ -1,16 +1,16 @@
-package com.example.mymovieapp.data.datasource
+package com.example.mymovieapp.data.remotesource
 
 import com.example.mymovieapp.data.api.ApiClient
 import com.example.mymovieapp.data.model.MovieResponse
 import com.example.mymovieapp.data.model.singlemovie.MovieDetails
 import com.example.mymovieapp.utils.Constants.Companion.API_KEY
-import io.reactivex.rxjava3.core.Observable
+import retrofit2.Response
 
 class RemoteDataSourceImpl : RemoteDataSource {
 
-    override fun getPopularMovies(
+    override suspend fun getPopularMovies(
         page : Int
-    ): Observable<MovieResponse> {
+    ): Response<MovieResponse> {
         val apiService = ApiClient.api
         return apiService.getPopularMovies(API_KEY,page)
     }
@@ -34,7 +34,7 @@ class RemoteDataSourceImpl : RemoteDataSource {
 
      */
 
-    override fun getMovieDetails(movieId: Int): Observable<MovieDetails> {
+    override suspend fun getMovieDetails(movieId: Int): Response<MovieDetails> {
         val  api = ApiClient.api
         return api.getMovieDetails(movieId)
     }

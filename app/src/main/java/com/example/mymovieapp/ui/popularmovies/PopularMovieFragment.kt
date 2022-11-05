@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mymovieapp.data.common.Resource
 import com.example.mymovieapp.data.model.Movie
 import com.example.mymovieapp.databinding.FragmentPopularMovieBinding
 import com.example.mymovieapp.ui.adapter.MovieAdapter
@@ -21,9 +22,9 @@ import com.example.mymovieapp.utils.SpacesItemDecoration
 
 class PopularMovieFragment : Fragment() {
 
-    private lateinit var binding : FragmentPopularMovieBinding
-    private var movieAdapter : MovieAdapter? = null
-    private val viewModel : PopularMovieViewModel by viewModels()
+    private lateinit var binding: FragmentPopularMovieBinding
+    private var movieAdapter: MovieAdapter? = null
+    private val viewModel: PopularMovieViewModel by viewModels()
     private val loaderDialog by lazy { LoaderDialog(requireContext()) }
 
 
@@ -31,7 +32,7 @@ class PopularMovieFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPopularMovieBinding.inflate(inflater,container,false)
+        binding = FragmentPopularMovieBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,7 +45,7 @@ class PopularMovieFragment : Fragment() {
     }
 
     private fun setUpObserver() {
-
+/*
         viewModel.movieList.observe(viewLifecycleOwner) {
 
             if (it.isNotEmpty()) {
@@ -55,7 +56,7 @@ class PopularMovieFragment : Fragment() {
             }
         }
 
-        /*
+
         viewModel.movieLiveData.observe(viewLifecycleOwner) {
 
             if (it.movieList.isNotEmpty()) {
@@ -74,7 +75,62 @@ class PopularMovieFragment : Fragment() {
             }
         }
 
-         */
+
+
+        viewModel.breakingNews.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Success -> {
+                    loaderDialog.hideLoader()
+                    response.data?.let { newsResponse ->
+                        newsAdapter?.setData(newsResponse.articles as ArrayList<Article>)
+                        val totalPages = newsResponse.totalResult / QUERY_PAGE_SIZE + 2
+                        isLastPage = viewModel.breakingNewsPage == totalPages
+
+                        if (isLastPage) {
+                            binding.recyclerView.setPadding(0, 0, 0, 0)
+                        }
+                    }
+                }
+                is Resource.Error -> {
+                    loaderDialog.hideLoader()
+                    response.message?.let { message ->
+                        Toast.makeText(activity, "An error occurred : $message", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+                is Resource.Loading -> {
+                    loaderDialog.showLoader()
+                }
+            }
+        }
+*/
+        viewModel.popularMovies.observe(viewLifecycleOwner) { response ->
+
+            when (response) {
+                is Resource.Success -> {
+                    loaderDialog.hideLoader()
+                    response.data?.let { movieResponse ->
+                        movieAdapter?.setData(movieResponse.movieList as ArrayList<Movie>)
+                        val totalPages = movieResponse.totalResults / QUERY_PAGE_SIZE + 2
+                        isLastPage = viewModel.popularMoviesPage == totalPages
+
+                        if (isLastPage) {
+                            binding.recyclerView.setPadding(0, 0, 0, 0)
+                        }
+                    }
+                }
+                is Resource.Error -> {
+                    loaderDialog.hideLoader()
+                    response.message?.let {message ->
+                        Toast.makeText(activity,"An error occurred : $message", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+                is Resource.Loading -> {
+                    loaderDialog.showLoader()
+                }
+            }
+        }
 
         viewModel.showLoader.observe(viewLifecycleOwner) {
             if (it)
@@ -84,7 +140,7 @@ class PopularMovieFragment : Fragment() {
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(),it, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         }
 
     }
@@ -103,7 +159,7 @@ class PopularMovieFragment : Fragment() {
         }
 
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(),3)
+            layoutManager = GridLayoutManager(requireContext(), 3)
             adapter = movieAdapter
             addItemDecoration(SpacesItemDecoration(5))
             addOnScrollListener(this@PopularMovieFragment.scrollListener)

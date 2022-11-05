@@ -1,56 +1,98 @@
 package com.example.mymovieapp.ui.popularmovies
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.mymovieapp.data.model.Movie
+import androidx.lifecycle.viewModelScope
+import com.example.mymovieapp.data.common.Resource
 import com.example.mymovieapp.data.model.MovieResponse
 import com.example.mymovieapp.data.repository.MovieRepository
 import com.example.mymovieapp.data.repository.MovieRepositoryImpl
 import com.example.mymovieapp.utils.BaseViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.awaitResponse
+import kotlinx.coroutines.launch
+import retrofit2.Response
+import java.io.IOException
 
 class PopularMovieViewModel : BaseViewModel(){
 
     private val repository : MovieRepository = MovieRepositoryImpl()
 
-    private val _movieList = MutableLiveData<List<Movie>>()
-    val movieList: LiveData<List<Movie>> = _movieList
-
-    private var movieResponse : MovieResponse? = null
+    val popularMovies : MutableLiveData<Resource<MovieResponse>> = MutableLiveData()
     var popularMoviesPage = 1
+    private var popularMovieResponse : MovieResponse? = null
 
-    fun getPopularMovie() {
-        val disposable = repository.getPopularMovies(popularMoviesPage)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe{showLoader.postValue(true)}
-            .doFinally{showLoader.value = false}
-            .subscribe({
-                showLoader.value = false
-                _movieList.postValue(it.movieList)
+    fun getPopularMovie() = viewModelScope.launch{
+        safePopularMovies()
+    }
 
+    private suspend fun safePopularMovies() {
 
-            },{
-                val error = "error"
-            })
+        popularMovies.postValue(Resource.Loading())
+
+        try {
+
+            if (hasInternetConnection()) {
+                val response = repository.getPopularMovies(popularMoviesPage)
+                popularMovies.postValue(handlePopularMoviesResponse(response))
+            } else {
+                popularMovies.postValue(Resource.Error("No internet connection"))
+            }
+        } catch (throwable : Throwable) {
+            when(throwable) {
+                is IOException -> popularMovies.postValue(Resource.Error("Network failure"))
+                else -> popularMovies.postValue(Resource.Error("Conversion error"))
+            }
+        }
     }
 
 
+    private fun handlePopularMoviesResponse( response: Response<MovieResponse>) : Resource<MovieResponse> {
 
-    fun getDummyData() : List<Movie> {
-        val list = ArrayList<Movie>()
+        if (response.isSuccessful) {
+            response.body()?.let { movieResponse ->
+                popularMoviesPage++
 
-        val movie = Movie(title = "Hello World", releaseDate = "2020")
-        list.add(movie)
-        list.add(movie)
-        list.add(movie)
+                if (popularMovieResponse == null) {
+                    popularMovieResponse = movieResponse
+                } else {
+                    val oldMovies = popularMovieResponse?.movieList
+                    val newMovies = movieResponse.movieList
 
-        return list
+                    oldMovies?.addAll(newMovies)
+                }
+                return Resource.Success(popularMovieResponse ?: movieResponse)
+            }
+        }
+        return Resource.Error(response.message())
     }
 
+    private fun hasInternetConnection(): Boolean {
 
+/*
+        val connectivityManager = Application().getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val activeNetwork = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+            return when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                return when(type) {
+                    ConnectivityManager.TYPE_WIFI -> true
+                    ConnectivityManager.TYPE_MOBILE -> true
+                    ConnectivityManager.TYPE_BLUETOOTH -> true
+                    else -> false
+                }
+            }
+        }
+
+         */
+        return true
+    }
 }

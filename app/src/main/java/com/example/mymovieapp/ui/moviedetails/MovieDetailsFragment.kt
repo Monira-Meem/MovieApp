@@ -38,28 +38,20 @@ class MovieDetailsFragment : Fragment() {
     private fun setUpObserver() {
 
         viewModel.movieDetails.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.tvMovieTitle.text = it.title
-                binding.tvMovieTagline.text = it.tagline
-                binding.ivMovieInfo.text = it.overview
+            loaderDialog.showLoader()
+            if (it.data != null) {
+                loaderDialog.hideLoader()
+                binding.rootLayout.visibility = View.VISIBLE
+                binding.tvMovieTitle.text = it.data.title
+                binding.tvMovieTagline.text = it.data.tagline
+                binding.movieReleaseDate.text = it.data.releaseDate
+                binding.ivMovieInfo.text = it.data.overview
                 Glide.with(binding.root)
-                    .load("https://image.tmdb.org/t/p/w500"+it.posterPath)
+                    .load("https://image.tmdb.org/t/p/w500"+it.data.posterPath)
                     .into(binding.ivMoviePoster)
             }
         }
 
-//        viewModel.movieDetailsLiveData.observe(viewLifecycleOwner) {
-//            if (it != null) {
-//                binding.tvMovieTitle.text = it.title
-//                binding.tvMovieTagline.text = it.tagline
-//                binding.ivMovieInfo.text = it.overview
-//                Glide.with(binding.root)
-//                    .load("https://image.tmdb.org/t/p/w500"+it.posterPath)
-//                    .into(binding.ivMoviePoster)
-//            }
-//
-//
-//        }
 
         viewModel.showLoader.observe(viewLifecycleOwner) {
             if (it)

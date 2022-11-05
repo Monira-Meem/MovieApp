@@ -1,13 +1,12 @@
-package com.example.mymovieapp.data.repository
+package com.example.mymovieapp.data.remotesource
 
 import com.example.mymovieapp.data.model.MovieResponse
 import com.example.mymovieapp.data.model.singlemovie.MovieDetails
-import io.reactivex.rxjava3.core.Observable
 import retrofit2.Response
 
-interface MovieRepository {
+interface RemoteDataSource {
 
     suspend fun getPopularMovies(page : Int) : Response<MovieResponse>
 
-    suspend fun getMovieDetails(movieId : Int) : Response<MovieDetails>
+    suspend fun getMovieDetails( movieId : Int) : Response<MovieDetails>
 }

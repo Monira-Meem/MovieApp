@@ -1,10 +1,10 @@
 package com.example.mymovieapp.data.repository
 
-import com.example.mymovieapp.data.datasource.RemoteDataSource
-import com.example.mymovieapp.data.datasource.RemoteDataSourceImpl
+import com.example.mymovieapp.data.remotesource.RemoteDataSource
+import com.example.mymovieapp.data.remotesource.RemoteDataSourceImpl
 import com.example.mymovieapp.data.model.MovieResponse
 import com.example.mymovieapp.data.model.singlemovie.MovieDetails
-import io.reactivex.rxjava3.core.Observable
+import retrofit2.Response
 
 class MovieRepositoryImpl : MovieRepository {
 
@@ -15,9 +15,9 @@ class MovieRepositoryImpl : MovieRepository {
     }
 
 
-    override fun getPopularMovies(
+    override suspend fun getPopularMovies(
         page: Int
-    ): Observable<MovieResponse> {
+    ): Response<MovieResponse> {
         return remoteDataSource.getPopularMovies(page)
     }
 
@@ -29,7 +29,7 @@ class MovieRepositoryImpl : MovieRepository {
         })
      */
 
-    override fun getMovieDetails(movieId: Int): Observable<MovieDetails> {
+    override suspend fun getMovieDetails(movieId: Int): Response<MovieDetails> {
        return remoteDataSource.getMovieDetails(movieId)
     }
     /*

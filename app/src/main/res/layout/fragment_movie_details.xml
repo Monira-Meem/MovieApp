@@ -22,59 +22,122 @@
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.842">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/root_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_movie_poster"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_gravity="center"
-                    android:scaleType="matrix"
-                    />
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/imageLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/_8dp">
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_movie_poster"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvTitle"
+                        style="@style/TextTagStyle"
+                        android:text="@string/_title"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+                        />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_movie_title"
+                        style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Movie Title"
+                        android:layout_marginStart="@dimen/_5dp"
                         android:text="@{movieDetails.title}"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
+                        android:textSize="@dimen/_18sp"
+                        app:layout_constraintLeft_toRightOf="@id/tvTitle"
+                        app:layout_constraintTop_toTopOf="@id/tvTitle"
+                        tools:text="Movie Title" />
 
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvSubTitle"
+                        style="@style/TextTagStyle"
+                        android:layout_marginTop="@dimen/_8dp"
+                        android:text="@string/_sub_title"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_movie_tagline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5dp"
+                        android:text="@{movieDetails.tagline}"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tvSubTitle"
+                        app:layout_constraintTop_toTopOf="@id/tvSubTitle"
+                        tools:text="Movie Subtitle" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvReleaseDate"
+                        style="@style/TextTagStyle"
+                        android:layout_marginTop="@dimen/_8dp"
+                        android:text="@string/_release_date"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_movie_tagline" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/movieReleaseDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Movie Subtitle"
-                        android:text="@{movieDetails.tagline}"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
+                        android:layout_marginStart="@dimen/_5dp"
+                        android:text="@{movieDetails.releaseDate}"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@id/tvReleaseDate"
+                        app:layout_constraintLeft_toRightOf="@id/tvReleaseDate"
+                        app:layout_constraintTop_toTopOf="@id/tvReleaseDate"
+                        tools:text="11-22-2022" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvOverview"
+                        style="@style/TextTagStyle"
+                        android:layout_marginTop="@dimen/_8dp"
+                        android:text="@string/_overview"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvReleaseDate" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/iv_movie_info"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        tools:text="Movie Info"
-                        android:text="@{movieDetails.overview}"
-                        android:layout_marginTop="15dp"
-                        android:textStyle="bold" />
+                        android:text="@{ movieDetails.overview }"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginStart="@dimen/_5dp"
+                        app:layout_constraintLeft_toRightOf="@id/tvOverview"
+                        app:layout_constraintStart_toEndOf="@+id/tvOverview"
+                        app:layout_constraintTop_toTopOf="@id/tvOverview"
+                        tools:text="Movie Info" />
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>
 
